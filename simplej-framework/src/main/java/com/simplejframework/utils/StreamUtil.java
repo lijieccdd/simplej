@@ -15,6 +15,12 @@ import java.io.InputStreamReader;
 public class StreamUtil {
     private static final Logger logger = LoggerFactory.getLogger(StreamUtil.class);
 
+    /**
+     * 从输入流中得到字符串
+     * @param is
+     * @return
+     * @throws IOException
+     */
     public static String getString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
