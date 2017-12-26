@@ -16,7 +16,7 @@ public class StreamUtil {
     private static final Logger logger = LoggerFactory.getLogger(StreamUtil.class);
 
     /**
-     * 从输入流中得到字符串
+     * 从输入流中得到字符串1
      * @param is
      * @return
      * @throws IOException
