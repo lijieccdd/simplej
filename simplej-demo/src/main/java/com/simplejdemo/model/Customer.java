@@ -1,4 +1,4 @@
-package com.simplespring.model;
+package com.simplejdemo.model;
 
 /**
  * Created by dell on 2017/12/25.

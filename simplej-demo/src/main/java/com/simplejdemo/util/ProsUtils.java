@@ -1,4 +1,4 @@
-package com.simplespring.util;
+package com.simplejdemo.util;
 
 import java.util.Properties;
 

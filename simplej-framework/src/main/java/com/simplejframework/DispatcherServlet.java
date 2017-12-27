@@ -9,9 +9,12 @@ import com.simplejframework.helper.BeanHelper;
 import com.simplejframework.helper.ConfigHelper;
 import com.simplejframework.helper.ControllerHelper;
 import com.simplejframework.helper.LoaderHelper;
+import com.simplejframework.utils.ClassUtil;
 import com.simplejframework.utils.ReflectionUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -32,18 +35,30 @@ import java.util.Map;
  * mvc核心转发器
  * Created by dell on 2017/12/25.
  */
-@WebServlet(value = "/*",loadOnStartup = 1)
+@WebServlet(value = "/*",loadOnStartup = 0)
 public class DispatcherServlet extends HttpServlet{
+    private static Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
     @Override
     public void init(ServletConfig config) throws ServletException {
+        /*logger.info(System.getProperty("java.classpath"));
+        System.out.println("java.classpath:"+System.getProperty("java.classpath"));*/
         LoaderHelper.init();
-        //注册jsp、静态资源处理器
+        //注册jsp处理器
         ServletContext servletContext = config.getServletContext();
+        String prefixJsp = ConfigHelper.getValue(ConfigConstant.prefixJsp);
+        if (StringUtils.isEmpty(prefixJsp)){
+            throw new RuntimeException("properties **simplej.prefix.jsp** can't be empty");
+        }
         ServletRegistration jspServletRegistration = servletContext.getServletRegistration("jsp");
-        jspServletRegistration.addMapping(ConfigHelper.getValue(ConfigConstant.prefixJsp)+"*");
+        jspServletRegistration.addMapping(prefixJsp+"*");
 
+        //注册静态资源处理器
+        String staticResource = ConfigHelper.getValue(ConfigConstant.staticResource);
+        if (StringUtils.isEmpty(staticResource)){
+            throw new RuntimeException("properties **simplej.resource** can't be empty");
+        }
         ServletRegistration defaultServletRegistration = servletContext.getServletRegistration("default");
-        defaultServletRegistration.addMapping(ConfigHelper.getValue(ConfigConstant.staticResource)+"*");
+        defaultServletRegistration.addMapping(staticResource+"*");
     }
 
     @Override
@@ -53,21 +68,22 @@ public class DispatcherServlet extends HttpServlet{
         //根据url得到handler
         Handler handler = ControllerHelper.getHandler(requestUrl);
 
-        if (handler==null){
-            throw new RuntimeException("can't find handler by url:"+requestUrl);
-        }
-        //获取controller类及其实例
-        Class controllerClass = handler.getController();
-        Object controllerIns = BeanHelper.getBean(controllerClass);
-        //得到处理请求的方法
-        Method actionMethod = handler.getMethod();
-        //从请求中获得请求参数
-        Map<String, Object> paramMap = getParamMap(req);
-        //通过反射调用handler相应的方法
-        Object result = ReflectionUtil.invokMethod(controllerIns,actionMethod,paramMap);
+        if (handler!=null){
+            //获取controller类及其实例
+            Class controllerClass = handler.getController();
+            Object controllerIns = BeanHelper.getBean(controllerClass);
+            //得到处理请求的方法
+            Method actionMethod = handler.getMethod();
+            //从请求中获得请求参数
+            Map<String, Object> paramMap = getParamMap(req);
+            //通过反射调用handler相应的方法
+            Object result = ReflectionUtil.invokMethod(controllerIns,actionMethod,paramMap);
 
-        //根据返回结果，响应客户端
-        respClientByResult(result,req,resp);
+            //根据返回结果，响应客户端
+            respClientByResult(result,req,resp);
+        }else {
+            logger.error("can't find handler by url:"+requestUrl);
+        }
     }
 
     private void respClientByResult(Object result,HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {

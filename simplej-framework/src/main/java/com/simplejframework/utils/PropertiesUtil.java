@@ -38,6 +38,7 @@ public class PropertiesUtil {
                 }
             }
         }
+        logger.debug("load properties:"+fileName+",success");
         return properties;
     }
 
@@ -60,7 +61,7 @@ public class PropertiesUtil {
      */
     public static String getValue(Properties properties,String key,String defaultVal){
         String value = defaultVal;
-        if(properties!=null&&properties.contains(key)){
+        if(properties!=null&&properties.containsKey(key)){
             value = properties.getProperty(key);
         }
         return  value;

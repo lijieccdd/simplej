@@ -22,7 +22,7 @@ public class IocHelper {
                 Class beanCls = classObjectEntry.getKey();
                 Object beanInstance = classObjectEntry.getValue();
 
-                Field[] fields = beanCls.getFields();
+                Field[] fields = beanCls.getDeclaredFields();
                 if(!ArrayUtils.isEmpty(fields)){
                     for (Field beanField : fields) {
                         if (beanField.isAnnotationPresent(Autowrite.class)){

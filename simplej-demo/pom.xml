@@ -21,23 +21,30 @@
             <artifactId>simplej-framework</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!--servlet、jsp、jstl依赖-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
         <!-- 配置插件 -->
         <plugins>
-            <!-- 配置jdk的编译版本，未配置的话maven会使用默认的jdk版本，可能导致编译出错-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
             <!--配置tomcat的部署路径等用于热部署
               1.1用户名和密码在tomcat目录conf中tomcat-users.xml配置
               1.2对当前项目执行mvn tomcat7:deploy命令（首次部署），或者mvn tomcat7:redeploy（再次部署），

@@ -97,7 +97,7 @@ public class ClassUtil {
         } catch (IOException e) {
             logger.error("io exception",e);
         }
-        return null;
+        return classSet;
     }
 
     private static void doAddClass(Set<Class> classSet, String className) {
@@ -143,6 +143,7 @@ public class ClassUtil {
     }
 
     public static void main(String[] args) {
-        getClassSet("com.simplejframework");
+        System.out.println(System.getProperty("java.classpath"));
+        //getClassSet("com.simplejframework");
     }
 }

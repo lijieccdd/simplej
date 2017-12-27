@@ -4,6 +4,9 @@ import com.simplejframework.annotation.Controller;
 import com.simplejframework.annotation.Service;
 import com.simplejframework.constant.ConfigConstant;
 import com.simplejframework.utils.ClassUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,10 +15,15 @@ import java.util.Set;
  * Created by dell on 2017/12/26.
  */
 public class ClassHelper {
-    private static Set<Class> classSet = null;
+    private static Logger logger = LoggerFactory.getLogger(ClassHelper.class);
+    private static Set<Class> classSet = new HashSet<>();
 
     static {
         String basePackage = ConfigHelper.getValue(ConfigConstant.baseScanPackage);
+        logger.debug("start scan basePackage,basePackage:"+basePackage);
+        if (StringUtils.isEmpty(basePackage)){
+            throw new RuntimeException("properties **simplej.basescan.package** can't be empty");
+        }
         classSet = ClassUtil.getClassSet(basePackage);
     }
 

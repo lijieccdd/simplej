@@ -35,9 +35,10 @@ public final class BeanHelper {
     }
 
     public static <T> T getBean(Class<T> tClass){
-        if (!beanMap.containsKey(tClass)){
-            throw new RuntimeException("can not find class instance:"+tClass);
+        T t = null;
+        if (beanMap.containsKey(tClass)){
+            t = (T) beanMap.get(tClass);
         }
-        return (T) beanMap.get(tClass);
+        return t;
     }
 }

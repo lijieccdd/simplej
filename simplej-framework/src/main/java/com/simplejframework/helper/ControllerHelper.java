@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  */
 public class ControllerHelper {
     //请求url与处理器map
-    private static Map<String,Handler> actionMap = null;
+    private static Map<String,Handler> actionMap = new HashMap<>();
 
     static {
         //得到所有controller class set
